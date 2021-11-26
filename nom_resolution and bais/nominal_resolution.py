@@ -2,7 +2,7 @@ import numpy as np
 from collections import Counter
 
 for i in range(1, 7):
-    with open(f'src/figure{i}.txt') as file:
+    with open(f'source/figure{i}.txt') as file:
         size_mm = float(file.readline())
         file.readline()
         image = np.loadtxt(file)
