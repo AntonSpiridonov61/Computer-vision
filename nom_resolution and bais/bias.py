@@ -8,8 +8,8 @@ def get_indexes_ones(path):
         indexes = np.nonzero(image[:])
     return indexes
 
-path1 = 'source/img1.txt'
-path2 = 'source/img2.txt'
+path1 = 'nom_resolution and bais/source/img1.txt'
+path2 = 'nom_resolution and bais/source/img2.txt'
 
 indexes_img1 = get_indexes_ones(path1)
 indexes_img2 = get_indexes_ones(path2)

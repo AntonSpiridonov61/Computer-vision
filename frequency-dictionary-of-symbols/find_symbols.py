@@ -69,7 +69,7 @@ def recognize(region):
 
     return None
 
-image = plt.imread("symbols.png")
+image = plt.imread("frequency-dictionary-of-symbols/symbols.png")
 binary = np.sum(image, 2)
 binary[binary > 0] = 1
 

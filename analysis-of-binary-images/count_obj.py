@@ -10,7 +10,7 @@ def counting_object(image, struct):
     image -= dilation
     return label(dilation).max()
 
-image = np.load("ps.npy")
+image = np.load("analysis-of-binary-images/ps.npy")
 
 struct = np.array([
             np.array([[1, 1, 1, 1, 1, 1],
