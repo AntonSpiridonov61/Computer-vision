@@ -1,33 +1,23 @@
 import matplotlib.pyplot as plt
-import numpy as np
 import os
 from skimage.color import rgb2gray
 from skimage import filters
 from skimage.measure import regionprops, label
 
-# from skimage.filters import try_all_threshold
-
-
-
-
-
 PATH = 'pencils/source/'
+cnt_pencils = 0
 
 for item in os.listdir(PATH):
     image = plt.imread(PATH + item)[10:-30, 10:-30]
+    
     gray = rgb2gray(image)
-    thresh = filters.threshold_isodata(gray)
-    binary = gray < thresh
-
+    thresh = filters.threshold_otsu(gray)
+    binary = gray.copy() <= thresh
     labeled = label(binary)
-    plt.imshow(labeled)
     regions = regionprops(labeled)
+
     for region in regions:
-        if region.area > 20000:
-            plt.imshow(region.image, cmap='gray')
-            plt.show()
+        if 2800 < region.major_axis_length < 3200:
+            cnt_pencils += 1
 
-    # fig, ax = try_all_threshold(gray, figsize=(10, 8), verbose=False)
-    # plt.show()
-
-
+print(f'All pencils = {cnt_pencils}')
