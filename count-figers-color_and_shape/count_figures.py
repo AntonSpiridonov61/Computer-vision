@@ -2,7 +2,6 @@ import numpy as np
 import matplotlib.pyplot as plt
 from skimage import color
 from skimage.measure import regionprops, label
-import math
 
 
 def get_colors(hsv_image):
@@ -22,22 +21,30 @@ def get_colors(hsv_image):
     colors.append(unique_vals[start_index:].mean() * 360)
     return colors
 
-def count_figures(region, diff):
+def get_border_colors(colors):
+    border_colors = []
+    for i in range(len(colors)):
+        if i == len(colors) - 1:
+            border_colors.append((colors[i] + 360.0) / 2)
+        else:  
+            border_colors.append((colors[i] + colors[i + 1]) / 2)
+    return border_colors
+
+def get_color_figure(region):
     center_row, center_col = map(int, region.centroid)
     color_figures = hsv_image[center_row, center_col, 0] * 360
-    color_figures = math.trunc(color_figures)
 
-    if colors[0] - diff < color_figures < colors[0] + diff:
+    if color_figures < border_colors[0]:
         return 'red'
-    if colors[1] - diff <  color_figures < colors[1] + diff:
+    if color_figures < border_colors[1]:
         return 'yellow'
-    if colors[2] - diff <  color_figures < colors[2] + diff:
+    if color_figures < border_colors[2]:
         return 'green'
-    if colors[3] - diff <  color_figures < colors[3] + diff:
+    if color_figures < border_colors[3]:
         return 'turquoise'
-    if colors[4] - diff <  color_figures < colors[4] + diff:
+    if color_figures < border_colors[4]:
         return 'blue'
-    if colors[5] - diff <  color_figures < colors[5] + diff:
+    if color_figures < border_colors[5]:
         return 'purple'
     return 'red'
 
@@ -51,24 +58,23 @@ labeled = label(binary)
 regions = regionprops(labeled)
 
 colors = get_colors(hsv_image)[1:]
+border_colors = get_border_colors(colors)
 
 figures_rect = dict()
 figures_circle = dict()
 
-diff = 20
-
 for region in regions:
-    res = count_figures(region, diff)
+    color_figure = get_color_figure(region)
     if np.all(region.image):
-        if res in figures_rect:
-            figures_rect[res] += 1
+        if color_figure in figures_rect:
+            figures_rect[color_figure] += 1
         else:
-            figures_rect[res] = 1
+            figures_rect[color_figure] = 1
     else:
-        if res in figures_circle:
-            figures_circle[res] += 1
+        if color_figure in figures_circle:
+            figures_circle[color_figure] += 1
         else:
-            figures_circle[res] = 1
+            figures_circle[color_figure] = 1
 
 print('Rect', figures_rect)
 print('Circle', figures_circle)
