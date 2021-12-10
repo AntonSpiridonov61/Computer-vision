@@ -8,7 +8,7 @@ PATH = 'pencils/source/'
 cnt_pencils = 0
 
 for item in os.listdir(PATH):
-    image = plt.imread(PATH + item)[20:-40, 20:-40]
+    image = plt.imread(PATH + item)[20:-40, 20:-100]
     
     gray = rgb2gray(image)
     thresh = filters.threshold_isodata(gray)
@@ -17,8 +17,13 @@ for item in os.listdir(PATH):
     regions = regionprops(labeled)
     temp = []
     for region in regions:
-       
-        if region.area > 2000.0 and region.major_axis_length / region.minor_axis_length > 19.0:
-            cnt_pencils += 1
+        temp.append(region.major_axis_length)
+        try:
+            max_el = max(temp)
+            if region.eccentricity > 0.99 and max_el == region.major_axis_length:
+                cnt_pencils += 1
+                temp.remove(max_el)
+        except ZeroDivisionError:
+            pass
 
 print(f'All pencils = {cnt_pencils}')
