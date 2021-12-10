@@ -40,9 +40,9 @@ def press_up():
     # pyautogui.keyDown('down')
 
 with mss.mss() as sct:
-    bbox = {"top": 330, "left": 285, "width": 70, "height": 50}
+    bbox = {"top": 330, "left": 255, "width": 80, "height": 50}
     flag = 1
-    val = 17290
+    val = 19760
     while True:
         
         sum_cactus, sum_bird = grab(bbox)
@@ -50,11 +50,11 @@ with mss.mss() as sct:
         if sum_cactus < val:
             # press_up()
             pyautogui.keyDown('up')      
-            sleep(0.01)             
+            # sleep(0.01)             
             # pyautogui.keyUp('space')
         # if sum_cactus == val:
-        #     pyautogui.keyUp('up')
-            # pyautogui.press('down')
+        #     # pyautogui.keyUp('up')
+        #     pyautogui.press('down')
 
         if sum_bird < val:
             # pyautogui.press('down')
@@ -62,7 +62,7 @@ with mss.mss() as sct:
             print(sum_bird)
             flag = 1
             pyautogui.keyDown('down')
-            sleep(0.5)
+            sleep(0.3)
             # pyautogui.keyUp('down')
 
         if sum_bird == val and flag == 1:
