@@ -2,7 +2,7 @@ import cv2
 import mss
 import numpy as np
 import pyautogui
-from time import sleep
+from time import sleep, perf_counter
 import matplotlib.pyplot as plt
 
 def grab(bbox):
@@ -16,7 +16,7 @@ def grab(bbox):
     # cnt_black_pxl = np.sum(img < 100)
     # cnt_white_pxl = np.sum(img > 100)
     # a = sum(map(sum, binary))
-    cactus = binary[40,:]
+    cactus = binary[45,:]
     bird = binary[3,:]
     # cactus = img[45,:,0]
     # bird = img[5,:,0]
@@ -39,22 +39,28 @@ def press_up():
     # pyautogui.keyUp('space')
     # pyautogui.keyDown('down')
 
+times = perf_counter()
 with mss.mss() as sct:
-    bbox = {"top": 330, "left": 255, "width": 80, "height": 50}
+    bbox = {"top": 330, "left": 250, "width": 80, "height": 50}
     flag = 1
     val = 19760
+    delay = 0.2
     while True:
-        
+
         sum_cactus, sum_bird = grab(bbox)
         # print(sum_cactus)
+        # pyautogui.keyUp('down')
         if sum_cactus < val:
             # press_up()
-            pyautogui.keyDown('up')      
-            # sleep(0.01)             
+            pyautogui.press('up')
+            # sleep(delay)
+            # pyautogui.press('down')
+            # pyautogui.keyDown('up')        
             # pyautogui.keyUp('space')
         # if sum_cactus == val:
         #     # pyautogui.keyUp('up')
         #     pyautogui.press('down')
+            # sleep(0.1)
 
         if sum_bird < val:
             # pyautogui.press('down')
