@@ -17,13 +17,6 @@ for item in os.listdir(PATH):
     regions = regionprops(labeled)
     temp = []
     for region in regions:
-        temp.append(region.major_axis_length)
-        try:
-            max_el = max(temp)
-            if region.eccentricity > 0.99 and max_el == region.major_axis_length:
-                cnt_pencils += 1
-                temp.remove(max_el)
-        except ZeroDivisionError:
-            pass
+        pass
 
 print(f'All pencils = {cnt_pencils}')
