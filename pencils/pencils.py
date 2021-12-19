@@ -3,9 +3,11 @@ import os
 from skimage.color import rgb2gray
 from skimage import filters
 from skimage.measure import regionprops, label
+import numpy as np
 
 PATH = 'pencils/source/'
 cnt_pencils = 0
+temp_minor = []
 
 for item in os.listdir(PATH):
     image = plt.imread(PATH + item)[20:-40, 20:-100]
@@ -15,15 +17,22 @@ for item in os.listdir(PATH):
     binary = gray.copy() <= thresh
     labeled = label(binary)
     regions = regionprops(labeled)
-    temp = []
+    temp_major = []
+    
     for region in regions:
-        temp.append(region.major_axis_length)
-        try:
-            max_el = max(temp)
-            if region.eccentricity > 0.99 and max_el == region.major_axis_length:
-                cnt_pencils += 1
-                temp.remove(max_el)
-        except ZeroDivisionError:
-            pass
+        temp_major.append(region.major_axis_length)
+        # temp_minor.append(region.minor_axis_length)
 
+    # temp_major.sort()
+    max_diff = 0
+    idx = len(temp_major)
+    for i in range(0, len(temp_major)-1):
+        if (temp_major[i+1] - temp_major[i]) > max_diff:
+            max_diff = temp_major[i+1] - temp_major[i]
+            idx = i + 1
+    temp_minor.append(max_diff)
+    # print(temp_major[idx:len(temp_major)])
+
+print(temp_minor)
+print(np.array(temp_minor).mean())
 print(f'All pencils = {cnt_pencils}')
