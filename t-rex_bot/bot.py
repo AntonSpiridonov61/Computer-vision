@@ -2,83 +2,61 @@ import cv2
 import mss
 import numpy as np
 import pyautogui
-from time import sleep
-import matplotlib.pyplot as plt
+from time import sleep, time
+
 
 def grab(bbox):
     img = np.array(sct.grab(bbox))
-    # binary = np.sum(img, 2)
-    # binary[binary > 0] = 1
     binary = cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY)
-    # cv2.imshow('image', cv2.cvtColor(img, cv2.COLOR_BGRA2GRAY))
     cv2.imshow('image', binary)
 
-    # cnt_black_pxl = np.sum(img < 100)
-    # cnt_white_pxl = np.sum(img > 100)
-    # a = sum(map(sum, binary))
-    cactus = binary[40,:]
-    bird = binary[3,:]
-    # cactus = img[45,:,0]
-    # bird = img[5,:,0]
+    cactus = binary[-1,:]
+    bird = binary[1,:]
 
     sum_cactus = np.sum(cactus)
     sum_bird = np.sum(bird)
-    # print(sum_cactus)
-
     return sum_cactus, sum_bird
 
-def press_up():
-    pyautogui.keyDown('space')
-    sleep(0.001)
-    pyautogui.keyUp('space')
-    sleep(0.001)
-    # pyautogui.press('down')
-    # pyautogui.keyUp('down')
-    # pyautogui.keyDown('space')
-    # time.sleep(0.13)
-    # pyautogui.keyUp('space')
-    # pyautogui.keyDown('down')
+def press_up(time):
+    pyautogui.keyDown('up')
+    sleep(time)
+    pyautogui.press('down')
+
 
 with mss.mss() as sct:
-    bbox = {"top": 330, "left": 255, "width": 80, "height": 50}
+
+    total_time = 0
+    bbox = {"top": 334, "left": 260, "width": 85, "height": 40}
     flag = 1
-    val = 19760
+    val = 20995
+    
     while True:
-        
+        cur_time = time()
         sum_cactus, sum_bird = grab(bbox)
         # print(sum_cactus)
         if sum_cactus < val:
-            # press_up()
-            pyautogui.keyDown('up')      
-            # sleep(0.01)             
-            # pyautogui.keyUp('space')
-        # if sum_cactus == val:
-        #     # pyautogui.keyUp('up')
-        #     pyautogui.press('down')
+            # print(total_time)
+            if total_time >= 20.0:
+                press_up(0.09)
+                # print('jump > 20')
+            # elif total_time >= 30.0:
+            #     press_up(0.06)
+            #     print('jump > 30')
+            else:
+                pyautogui.keyDown('up')
 
         if sum_bird < val:
-            # pyautogui.press('down')
-            # print(bird)
-            print(sum_bird)
             flag = 1
             pyautogui.keyDown('down')
-            sleep(0.3)
-            # pyautogui.keyUp('down')
+            sleep(0.25)
 
         if sum_bird == val and flag == 1:
-            pyautogui.keyUp('down')
             flag = 0
-            print('flag')
-            print(sum_bird)
+            pyautogui.keyUp('down')
+
         
-
-        #light mode
-        # if cnt_black_pxl > 500 and cnt_black_pxl < 5000:
-        #     pyautogui.press('up')
-
-        # if cnt_white_pxl > 500 and cnt_white_pxl < 10000:
-        #     pyautogui.press('up')
-
+        total_time += time() - cur_time
+        
         if cv2.waitKey(25) & 0xFF == ord("q"):
             cv2.destroyAllWindows()
             break
