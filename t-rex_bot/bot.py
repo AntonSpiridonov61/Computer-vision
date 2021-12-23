@@ -26,7 +26,8 @@ def press_up(time):
 with mss.mss() as sct:
 
     total_time = 0
-    bbox = {"top": 334, "left": 260, "width": 85, "height": 40}
+    bbox = {"top": 450, "left": 184, "width": 85, "height": 40}
+    # bbox = {"top": 334, "left": 260, "width": 85, "height": 40}
     flag = 1
     val = 20995
     
@@ -37,7 +38,7 @@ with mss.mss() as sct:
         if sum_cactus < val:
             # print(total_time)
             if total_time >= 20.0:
-                press_up(0.09)
+                press_up(0.08)
                 # print('jump > 20')
             # elif total_time >= 30.0:
             #     press_up(0.06)
